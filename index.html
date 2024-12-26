@@ -7,6 +7,8 @@
     <style>
         * {
             margin: 0;
+            margin-right: 0%;
+            padding-right: 0%;
             padding: 0;
             box-sizing: border-box;
         }
@@ -49,7 +51,7 @@
 
         .borda3 {
             position: absolute;
-            bottom: -300%;
+            bottom: -260%;
             left: 0;
             transform: translateY(0);
             width: 40%;
@@ -85,11 +87,7 @@
             margin-left: 10%;
             align-items: center;
             justify-content: center; /* Centraliza horizontalmente */
-            background-image: url('./img/circunferencia.png');
-            background-repeat: no-repeat;
-            background-size: 40%;
-            background-position: 40%;
-            background-position-y: 150%;
+            z-index: 10;
         }
 
         .header, .content, .footer {
@@ -156,22 +154,67 @@
             margin-left: -25%;
         }
 
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #ff0084;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
+        .segundo_card {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 20%;
+            margin-right: 15%;
         }
 
-        .button:hover {
-            background-color: #ffe0f0;
+        .terceiro_card{
+            display: flex;
+            justify-content: space-between; 
+            margin-right: 37%;
+            margin-left: 20%;
+        }
+
+        .cardbaixo {
+            font-family: 'SN Pro', sans-serif;
+            background-color: white;
+            color: #ff0084;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10%;
+            width: 100%;
+            max-width: 290px; 
+            height: 20rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .button {
+            font-family: 'SN Pro', sans-serif;
+            margin-top: 20px;
+            padding: 20px 80px;
+            background-color: green;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 20px;
+        }
+
+        .botao{
+            margin-top: 10%;
+            margin-left: 38%;
         }
 
         h1 span {
             display: block; /* Isso faz com que cada span ocupe uma linha */
+        }
+
+        .familia {
+            width: 60%;
+            margin-left: 50%;
+            margin-top: -30%;
+        }
+
+        .circunferencia {
+            position: absolute;
+            width: 60%;
+            margin-left: 20%;
+            margin-top: -12%;
+            opacity: 0.66;
         }
 
     </style>
@@ -196,9 +239,12 @@
 
     <div class="section content">
         <h1>COMO PARTICIPAR?</h1>
-        <!-- <a href="https://www.exemplo.com" class="button">Ir para outro lugar</a> -->
     </div>
 
+    <div class="circunferencia">
+        <img src="./img/circunferencia.png" class="circunferencia">
+    </div>
+    
     <div class="imagens1">
         <div>
             <img src="./img/passo1.png" class="passo1">
@@ -220,9 +266,48 @@
         </div>
     </div>
 
+    <div class="botao">
+        <a href="https://www.exemplo.com" class="button">QUERO PARTICIPAR</a>
+    </div>
+<div class="segundo_card">
+    <div class="cardbaixo">
+        <h1>GANHE VIAGENS</h1>
+        <img></img>
+        <p>você concorre a 120 viagens, sendo 10 sorteios por mês.</p>
+    </div>
+    
+    <div class="cardbaixo">
+        <h1>VIAJE O BRASIL</h1>
+        <img></img>
+        <p>Todos os destinos serão dentro do territorio brasileiro.</p>
+    </div>
+
+    <div class="cardbaixo">
+        <h1>ACOMPANHANTE</h1>
+        <img></img>
+        <p>você pode levar até um acompanhante para aprovitar do seu lado.</p>
+    </div>
+</div>
+
+<div class="terceiro_card">
+    <div class="cardbaixo">
+        <h1>OLHE A DATA</h1>
+        <img></img>
+        <p>Sorteio será feito no último dia de cada mês, fique atento.</p>
+    </div>
+
+    <div class="cardbaixo">
+        <h1>MAIS CHANCES</h1>
+        <img></img>
+        <p>Pagamento com cartão de crédito aumenta suas chances de ser sorteado.</p>
+    </div>
+</div>
+
+<img src="./img/Familia_fundo.png" class="familia"></img>
+<!-- 
     <div class="section footer">
         <p>&copy; 2024 Todos os direitos reservados</p>
-    </div>
+    </div> -->
 
     <!-- Imagem no final da página -->
     <img src="./img/nuvemBaixo.png" alt="Imagem 3" class="borda3">
