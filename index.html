@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página com Imagens</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'SN Pro';
+            src: url('./fonts/SNPro-Regular-BF65efc640b4961.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        h1 {
+            font-family: 'SN Pro', sans-serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #ff0084;
+        }
+
+        /* Estilos para as bordas */
+        .borda1 {
+            position: absolute;
+            top: -9%;
+            left: 13%;
+            transform: rotate(90deg) translateY(-50%);
+            transform-origin: left top;
+            width: 40%;
+        }
+
+        .borda2 {
+            position: absolute;
+            top: 0;
+            right: 14%;
+            transform: rotate(-90deg) translateY(-50%);
+            transform-origin: right top;
+            width: 40%;
+        }
+
+        .borda3 {
+            position: absolute;
+            bottom: -300%;
+            left: 0;
+            transform: translateY(0);
+            width: 40%;
+        }
+
+        /* Seções para conteúdo */
+        .section {
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex; /* Aplica flexbox */
+            justify-content: center; /* Alinha horizontalmente no centro */
+            align-items: center; /* Alinha verticalmente no centro */
+            flex-direction: column; /* Organiza os itens em coluna (imagem acima do texto) */
+        }
+
+        .section.header {
+            display: flex;
+            flex-direction: row; /* Imagem e texto ficam lado a lado */
+            align-items: center; /* Alinha os itens verticalmente ao centro */
+            gap: 20px; /* Espaço entre a imagem e o texto */
+            justify-content: center; /* Centraliza horizontalmente */
+        }
+
+        .section.content {
+            margin-top: -350px; /* Ajuste o valor conforme necessário para subir a seção */
+        }
+
+        .imagens1 {
+            display: flex;
+            flex-direction: row; /* Imagem e texto ficam lado a lado */
+            margin-top: -400px; /* Ajuste o valor conforme necessário para subir a seção */
+            align-items: center;
+            justify-content: center; /* Centraliza horizontalmente */
+        }
+
+        .header, .content, .footer {
+            background-color: #ff0084;
+            color: white;
+        }
+
+        .IMAGEM_1 {
+            width: 30%; /* Ajusta o tamanho da imagem */
+        }
+        .passo1 {
+            width: 20%;
+        }
+
+        .passo2 {
+            margin-top: 30%;
+            width: 20%;
+        }
+
+        .passo3 {
+            width: 20%;
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #ff0084;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #ffe0f0;
+        }
+
+        h1 span {
+            display: block; /* Isso faz com que cada span ocupe uma linha */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Imagens posicionadas -->
+    <img src="./img/nuvem1.png" alt="Imagem 1" class="borda1">
+    <img src="./img/nuvem2.png" alt="Imagem 2" class="borda2">
+    
+    <!-- Conteúdo principal -->
+    <div class="section header">
+        <img src="./img/IMAGEM_1.png" alt="Imagem Central" class="IMAGEM_1">
+        <div>
+            <h1>
+                <span>SE CADASTRANDO NA HIGO</span>
+                <span>VOCÊ CONCORRE A 10</span>
+                <span>VIAGENS POR MÊS</span>
+            </h1>
+        </div>
+    </div>
+    
+
+    <div class="section content">
+        <h1>COMO PARTICIPAR?</h1>
+        <!-- <a href="https://www.exemplo.com" class="button">Ir para outro lugar</a> -->
+    </div>
+
+    <div class="imagens1">
+        <img src="./img/passo1.png" class="passo1"> </img>
+        <img src="./img/passo2.png" class="passo2"> </img>
+        <img src="./img/passo3.png" class="passo3"> </img>
+    </div>
+
+    <div class="section footer">
+        <p>&copy; 2024 Todos os direitos reservados</p>
+    </div>
+
+    <!-- Imagem no final da página -->
+    <img src="./img/nuvemBaixo.png" alt="Imagem 3" class="borda3">
+</body>
+</html>
