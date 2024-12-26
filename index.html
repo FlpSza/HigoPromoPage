@@ -81,9 +81,15 @@
         .imagens1 {
             display: flex;
             flex-direction: row; /* Imagem e texto ficam lado a lado */
-            margin-top: -400px; /* Ajuste o valor conforme necessário para subir a seção */
+            margin-top: -30%; /* Ajuste o valor conforme necessário para subir a seção */
+            margin-left: 10%;
             align-items: center;
             justify-content: center; /* Centraliza horizontalmente */
+            background-image: url('./img/circunferencia.png');
+            background-repeat: no-repeat;
+            background-size: 40%;
+            background-position: 40%;
+            background-position-y: 150%;
         }
 
         .header, .content, .footer {
@@ -94,17 +100,60 @@
         .IMAGEM_1 {
             width: 30%; /* Ajusta o tamanho da imagem */
         }
-        .passo1 {
-            width: 20%;
-        }
 
-        .passo2 {
-            margin-top: 30%;
-            width: 20%;
+        .passo1, .passo2, .passo3 {
+            width: 60%;
         }
 
         .passo3 {
-            width: 20%;
+            margin-left: -30%;
+        }
+
+        .passo2 {
+            margin-top: 90%;
+            margin-left: 8%;
+        }
+        
+        .passo1 {
+            margin-left: 35%;
+        }
+
+        .card {
+            background-color: white;
+            color: #ff0084;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 300%;
+            max-width: 300px; /* Limita o tamanho do card */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card1 {
+            background-color: white;
+            color: #ff0084;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 300%;
+            max-width: 300px; /* Limita o tamanho do card */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: 25%;
+        }
+
+        .card3 {
+            background-color: white;
+            color: #ff0084;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 300%;
+            max-width: 300px; /* Limita o tamanho do card */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: -25%;
         }
 
         .button {
@@ -151,9 +200,24 @@
     </div>
 
     <div class="imagens1">
-        <img src="./img/passo1.png" class="passo1"> </img>
-        <img src="./img/passo2.png" class="passo2"> </img>
-        <img src="./img/passo3.png" class="passo3"> </img>
+        <div>
+            <img src="./img/passo1.png" class="passo1">
+            <div class="card1">
+                <p>FAÇA SEU CADASTRO NO SITE DA HIGO E SIGA A GENTE NO INSTAGRAM E TIKTOK</p>
+            </div>
+        </div>
+        <div>
+            <img src="./img/passo2.png" class="passo2">
+            <div class="card">
+                <p>PARA CONCORRER É NECESSARIO PAGAR A MENSALIDADE DE R$ 00,00 REAIS.</p>
+            </div>
+        </div>
+        <div>
+            <img src="./img/passo3.png" class="passo3">
+            <div class="card3">
+                <p>CONCORRA A 10 VIAGENS POR MÊS COM DIREITO A 1 ACOMPANHANTE</p>
+            </div>
+        </div>
     </div>
 
     <div class="section footer">
