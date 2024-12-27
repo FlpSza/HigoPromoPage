@@ -220,6 +220,123 @@
             opacity: 0.66;
         }
 
+        @media (max-width: 768px) {
+        body {
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .borda1 {
+            position: absolute;
+            top: -2%;
+            left: 13%;
+            transform: rotate(90deg) translateY(-50%);
+            transform-origin: left top;
+            width: 40%;
+        }
+
+        .borda2 {
+            position: absolute;
+            top: 20%;
+            right: 14%;
+            transform: rotate(-90deg) translateY(-50%);
+            transform-origin: right top;
+            width: 40%;
+        }
+
+        .borda3 {
+            position: absolute;
+            bottom: -240%;
+            left: 0;
+            transform: translateY(0);
+            width: 40%;
+        }
+
+        .section.header {
+            flex-direction: column; /* Alinha itens verticalmente */
+            align-items: center;
+            margin-top: -25%;
+        }
+
+        .section {
+            margin-top: -80%;
+        }
+
+        .section.content {
+            margin-top: -125%; /* Ajuste o valor conforme necessário para subir a seção */
+        }
+
+        .IMAGEM_1 {
+            width: 80%; /* Ajusta o tamanho da imagem para caber na tela */
+        }
+
+        .passo1, .passo2, .passo3 {
+            width: 80%; /* Ajusta o tamanho das imagens para caberem na tela */
+        }
+
+        .passo1 {
+            margin-top: -30%;
+            margin-left: 8%;
+        }
+
+        .passo2 {
+            margin-top: -1%;
+        }
+
+        .passo3 {
+            margin-left: 10%;
+        }
+
+        .card, .card1, .card3 {
+            width: 90%; /* Ajusta os cards para ocuparem quase toda a largura da tela */
+            margin: 10px auto; /* Adiciona espaçamento e centraliza */
+        }
+
+        .imagens1 {
+            flex-direction: column; /* Empilha os itens verticalmente */
+            margin-left: 0; /* Remove margens laterais */
+            gap: 20px; /* Espaço entre os itens */
+        }
+
+        .botao {
+            margin: 20px auto; /* Centraliza o botão */
+            text-align: center;
+        }
+
+        .segundo_card, .terceiro_card {
+            flex-direction: column; /* Empilha os cards verticalmente */
+            gap: 30px; /* Adiciona espaço entre os cards */
+            margin-left: 15%;
+            margin-bottom: 10%;
+        }
+
+        .cardbaixo {
+            width: 180%; /* Ajusta a largura para caber na tela */
+            height: auto; /* Permite que a altura se ajuste ao conteúdo */
+            margin-top: 10%;
+        }
+
+        .familia {
+            width: 90%; /* Reduz a largura da imagem */
+            margin-top: -61%;
+            margin-left: 5%;
+            display: block;
+        }
+
+        .circunferencia {
+            display: none;
+        }
+
+        h1 {
+            font-size: 1.5rem; /* Ajusta o tamanho da fonte para telas menores */
+        }
+
+        .button {
+            padding: 15px 40px; /* Reduz o tamanho do botão */
+            font-size: 16px; /* Reduz o tamanho da fonte */
+        }
+    }
+
     </style>
 </head>
 <body>
