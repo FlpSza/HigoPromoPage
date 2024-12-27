@@ -28,6 +28,8 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             background-color: #ff0084;
+            overflow-x: hidden; /* Remove o scroll horizontal */
+
         }
 
         /* Estilos para as bordas */
@@ -51,7 +53,7 @@
 
         .borda3 {
             position: absolute;
-            bottom: -263%;
+            bottom: -255%;
             left: 0;
             transform: translateY(0);
             width: 40%;
@@ -207,6 +209,7 @@
             width: 60%;
             margin-left: 50%;
             margin-top: -30%;
+            display: block; /* Garante que o elemento se comporte como um bloco */
         }
 
         .circunferencia {
