@@ -90,15 +90,47 @@ app.post('/login', async (req, res) => {
 });
 
 // Configuração da chave da API do Asaas
-const ASAAS_API_KEY = '$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjJiNWVmMTk5LWRmNTYtNGRiMy05MjY2LWI3NTUyOWZjY2YzOTo6JGFhY2hfMjJhNzI1M2MtMTVlOC00NTE1LWEyNjYtMDRlNzRjNjRhNzBm'
+const ASAAS_API_KEY = '$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjI1MzgwZGNhLTM2MDItNDUzMi04ZDRkLTA4MWRmNDU0OTU2NTo6JGFhY2hfOTU5NTFmYTctYTZhZi00MTQ5LThiNjMtNDQ0Mjg0ZWE3OTFh'
 
 // Endpoint para criar cliente
 app.post('/criar-cliente', async (req, res) => {
     const clienteData = req.body;
 
     try {
-        // Enviar dados para o Asaas
-        console.log('Enviando dados para criar cliente:', clienteData);
+        // Verificar se o email já existe na tabela users
+        const checkEmailQuery = 'SELECT * FROM users WHERE email = ? LIMIT 1';
+        const [userResult] = await db.query(checkEmailQuery, [clienteData.email]);
+
+        let userId;
+
+        // Se o email existir, atualiza o usuário com o customerId
+        if (userResult.length > 0) {
+            userId = userResult[0].id;
+            console.log(`Usuário encontrado: ${userResult[0].email}, Atualizando...`);
+            
+            // Atualiza o customerId na tabela users
+            const updateQuery = 'UPDATE users SET customerId = ? WHERE id = ?';
+            await db.query(updateQuery, [clienteData.customerId, userId]);
+
+        } else {
+            // Se o email não existir, cria um novo usuário
+            console.log(`Usuário não encontrado, criando novo usuário...`);
+            
+            const insertQuery = 'INSERT INTO users (nome, email, telefone, cpfCnpj, postalCode, customerId) VALUES (?, ?, ?, ?, ?, ?)';
+            const [insertResult] = await db.query(insertQuery, [
+                clienteData.nome,
+                clienteData.email,
+                clienteData.telefone,
+                clienteData.cpf,
+                clienteData.cep,
+                clienteData.customerId, // customerId gerado do Asaas
+            ]);
+            
+            userId = insertResult.insertId;
+        }
+
+        // Enviar dados para criar o cliente no Asaas
+        console.log('Enviando dados para criar cliente no Asaas:', clienteData);
         const response = await axios.post('https://sandbox.asaas.com/api/v3/customers', {
             name: `${clienteData.nome} ${clienteData.sobrenome}`,
             cpfCnpj: clienteData.cpf,
@@ -113,33 +145,31 @@ app.post('/criar-cliente', async (req, res) => {
             }
         });
 
-        // Exibir a resposta JSON no console
-        console.log('Cliente criado com sucesso:', JSON.stringify(response.data, null, 2));
+        console.log('Cliente criado com sucesso no Asaas:', JSON.stringify(response.data, null, 2));
 
-        // Pegar o customerId da resposta
-        const customerId = response.data.id;
+        const customerId = response.data.id; // Pega o customerId da resposta do Asaas
 
-        // Agora, você pode salvar as informações do cliente no banco de dados
-        const query = 'INSERT INTO customers (customerId, nome, email, telefone, cpfCnpj, postalCode) VALUES (?, ?, ?, ?, ?, ?)';
-        await db.query(query, [
-            customerId,
-            clienteData.nome,
-            clienteData.email,
-            clienteData.telefone,
-            clienteData.cpf,
-            clienteData.cep
-        ]);
+        // Atualiza ou cria o customerId no banco de dados
+        const customerQuery = 'UPDATE users SET customerId = ? WHERE id = ?';
+        await db.query(customerQuery, [customerId, userId]);
 
-        // Retornar o ID do cliente para a criação da assinatura
+        // Retorna a resposta para o cliente
         res.json({
             success: true,
             data: response.data,
-            customerId: customerId  // Retorne o ID do cliente para usar na próxima operação
+            customerId: customerId,
         });
 
     } catch (error) {
-        // Se houver um erro na criação do cliente, retorna erro
-        console.error('Erro ao criar cliente:', error.response ? error.response.data : error.message);
+        // Se houver um erro, retorna erro
+        console.error('Erro ao criar cliente(back):', error.response ? error.response.data : error.message);
+        console.log('Dados enviados para a API Asaas:', {
+            name: `${clienteData.nome} ${clienteData.sobrenome}`,
+            cpfCnpj: clienteData.cpf,
+            email: clienteData.email,
+            phone: clienteData.telefone,
+            postalCode: clienteData.cep,
+        });
         res.json({ success: false, error: 'Erro ao criar o cliente no Asaas' });
     }
 });

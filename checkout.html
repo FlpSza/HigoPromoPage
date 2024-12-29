@@ -232,6 +232,10 @@
                     <input type="text" id="cep" name="cep">
                 </label>
             </div>
+            <hr>
+            <div class="subtitulo">
+                <h4>Confirme seu email.</h4><br>
+            </div>
             <div class="form-group">
                 <label for="email" class="full-width">
                     Email
@@ -293,7 +297,7 @@
                     // Redirecionar para a próxima página, por exemplo, de pagamento
                     window.location.href = './payment.html';
                 } else {
-                    alert('Erro ao criar o cliente: ' + data.error);
+                    alert('Erro ao criar o cliente(front): ' + data.error);
                 }
             })
             .catch(error => {
