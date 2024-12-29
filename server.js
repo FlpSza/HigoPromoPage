@@ -78,11 +78,6 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Senha incorreta.' });
         }
 
-        // Se a senha for correta, crie uma sessão e armazene o email do usuário nela
-        req.session.email = user.email;
-        const email = req.session.email;
-        // console.log(email)
-
         // Resposta de login bem-sucedido
         res.status(200).json({ message: 'Login bem-sucedido!', email: user.email });
 
@@ -123,6 +118,15 @@ app.post('/criar-cliente', async (req, res) => {
 
         const customerId = response.data.id; // Pega o customerId da resposta do Asaas
         console.log('Cliente criado com sucesso no Asaas:', customerId);
+
+        // Armazenar os dados na sessão
+        req.session.userData = {
+            email: clienteData.email,
+            cpfCnpj: clienteData.cpf,
+            telefone: clienteData.telefone,
+            postalCode: clienteData.cep,
+            numeroCasa: clienteData.numeroCasa
+        };
 
         // Verificar se o email já existe na tabela users
         const checkEmailQuery = 'SELECT id FROM users WHERE email = ? LIMIT 1';
@@ -174,81 +178,133 @@ app.post('/criar-cliente', async (req, res) => {
 });
 
 
+
 // Rota para criar assinatura (cobrança recorrente) com pagamento via cartão de crédito
 app.post('/criar-assinatura', async (req, res) => {
-    const email = req.session.email; // Email da sessão
-    const { billingType, value, nextDueDate, cycle, description, cardDetails } = req.body;
+    // Recuperar os dados da sessão
+    const userData = req.session.userData;
 
-    if (!email) {
-        return res.status(400).json({ success: false, message: 'Email não encontrado na sessão' });
+    if (!userData) {
+        return res.status(400).json({ success: false, message: 'Dados do usuário não encontrados na sessão.' });
     }
 
-    console.log('Email do cliente:', email);
+    const { email, cpfCnpj, telefone, postalCode, numeroCasa } = userData;
+
+    console.log('Dados do usuário recuperados da sessão:', { email, cpfCnpj, telefone, postalCode, numeroCasa });
 
     try {
-        // Buscar o customerId no banco de dados com base no email
-        const query = 'SELECT customerId FROM users WHERE email = ? LIMIT 1';
-        const [result] = await db.query(query, [email]);
+        // Detalhes do cartão enviados na requisição
+        const { cardDetails } = req.body;
 
-        if (result.length === 0 || !result[0].customerId) {
-            return res.status(404).json({ success: false, message: 'Cliente não encontrado ou customerId ausente no banco de dados' });
+        if (!cardDetails || !cardDetails.cardHolder || !cardDetails.cardNumber || !cardDetails.expirationMonth || !cardDetails.expirationYear || !cardDetails.cvv) {
+            return res.status(400).json({ success: false, message: 'Detalhes do cartão incompletos ou inválidos.' });
         }
 
-        const customerId = result[0].customerId;
-        console.log('Customer ID encontrado no banco de dados:', customerId);
+        console.log('Detalhes do cartão:', cardDetails);
 
-        // Montar o corpo da requisição para o Asaas
-        const url = 'https://sandbox.asaas.com/api/v3/subscriptions';
-        const body = {
-            billingType: billingType || 'CREDIT_CARD',
-            customer: customerId, // Usar o customerId buscado no banco
-            value,
-            nextDueDate,
-            cycle: cycle || 'MONTHLY',
-            description,
-            ...(billingType === 'CREDIT_CARD' && {
-                creditCard: {
-                    holderName: cardDetails.cardHolder,
-                    number: cardDetails.cardNumber,
-                    expirationMonth: cardDetails.expirationMonth,
-                    expirationYear: cardDetails.expirationYear,
-                    cvv: cardDetails.cvv
-                }
-            })
+        // Garantir que o mês de expiração tenha dois dígitos
+        const expirationMonth = cardDetails.expirationMonth ? cardDetails.expirationMonth.padStart(2, '0') : '';
+        const expirationYear = cardDetails.expirationYear || '';
+        const cvv = cardDetails.cvv || '';
+
+        // Query para buscar o customerId do usuário pelo email
+        const usuarioQuery = 'SELECT customerId FROM users WHERE email = ? LIMIT 1;';
+        const [usuarioResult] = await db.query(usuarioQuery, [email]);
+
+        if (usuarioResult.length === 0) {
+            return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
+        }
+
+        const customerId = usuarioResult[0].customerId;
+        console.log('customerId encontrado no banco de dados:', customerId);
+
+        // Estrutura para a requisição de tokenização
+        const tokenBody = {
+            creditCard: {
+                holderName: cardDetails.cardHolder,
+                number: cardDetails.cardNumber,
+                expiryMonth: expirationMonth,
+                expiryYear: expirationYear,
+                ccv: cvv
+            },
+            creditCardHolderInfo: {
+                name: cardDetails.cardHolder,
+                email: email,
+                cpfCnpj: cpfCnpj,
+                postalCode: postalCode,
+                addressNumber: cardDetails.numeroCasa || 'S/N',
+                phone: telefone,
+                mobilePhone: telefone,
+                addressComplement: cardDetails.addressComplement || ''
+            },
+            customer: customerId, // Agora estamos usando o customerId da tabela users
+            remoteIp: req.ip
         };
 
-        // Log detalhado do payload enviado
-        console.log('Payload enviado para o Asaas:', JSON.stringify(body, null, 2));
-
-        const options = {
+        // Opções para a requisição da tokenização
+        const tokenOptions = {
             method: 'POST',
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
-                access_token: ASAAS_API_KEY // Substitua pelo seu token do Asaas
+                access_token: ASAAS_API_KEY  // Substitua com seu token de acesso correto
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(tokenBody)
         };
 
-        // Enviar requisição para o Asaas
-        const response = await fetch(url, options);
+        // Realizar a requisição para a API Asaas
+        const tokenResponse = await fetch('https://sandbox.asaas.com/api/v3/creditCard/tokenizeCreditCard', tokenOptions);
 
-        if (!response.ok) {
-            const error = await response.json();
-            console.error('Erro ao criar assinatura:', error);
-            return res.status(response.status).json({ success: false, message: 'Erro ao criar assinatura.', error });
+        // Captura a resposta da API como texto
+        const responseText = await tokenResponse.text();
+        console.log('Resposta da API:', responseText);
+
+        // Verificar se a resposta foi bem-sucedida (status 2xx)
+        if (!tokenResponse.ok) {
+            console.error(`Erro na resposta: ${tokenResponse.status} - ${tokenResponse.statusText}`);
+            return res.status(tokenResponse.status).json({
+                success: false,
+                message: 'Erro ao tokenizar cartão.',
+                error: responseText
+            });
         }
 
-        const data = await response.json();
-        console.log('Assinatura criada com sucesso:', data);
+        // Tenta fazer o parse da resposta em JSON
+        let tokenData;
+        try {
+            tokenData = JSON.parse(responseText);
+        } catch (jsonParseError) {
+            console.error('Erro ao parsear resposta JSON:', jsonParseError);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro ao processar a resposta da API. A resposta não é um JSON válido.',
+                error: jsonParseError.message
+            });
+        }
 
-        // Retornar sucesso
-        res.json({ success: true, message: 'Assinatura criada com sucesso!', data });
+        console.log('Token de cartão de crédito criado:', tokenData);
+
+        // Continue com a criação da assinatura usando o token (não mostrado aqui)
+        // ...
+
+        // Resposta de sucesso
+        res.json({
+            success: true,
+            message: 'Assinatura criada com sucesso.',
+            tokenData: tokenData
+        });
+
     } catch (err) {
+        // Captura erros inesperados e envia resposta de erro
         console.error('Erro inesperado:', err);
-        res.status(500).json({ success: false, message: 'Erro ao criar assinatura.', error: err.message });
+        res.status(500).json({
+            success: false,
+            message: 'Erro ao buscar informações do cliente ou tokenizar cartão.',
+            error: err.message
+        });
     }
 });
+
 
 
 

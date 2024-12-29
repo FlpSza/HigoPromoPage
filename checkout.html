@@ -231,6 +231,12 @@
                     CEP
                     <input type="text" id="cep" name="cep">
                 </label>
+                <div class="form-group">
+                    <label for="numero-casa">
+                        Número da Casa
+                        <input type="text" id="numero-casa" name="numero-casa">
+                    </label>
+                </div>                
             </div>
             <hr>
             <div class="subtitulo">
@@ -269,6 +275,7 @@
             const cpf = document.getElementById('cpf').value;
             const cep = document.getElementById('cep').value;
             const email = document.getElementById('email').value;
+            const numeroCasa = document.getElementById('numero-casa').value;
     
             // Criação do objeto com os dados do formulário
             const clienteData = {
@@ -280,6 +287,7 @@
                 telefone,
                 cpf,
                 cep,
+                numeroCasa,
                 email
             };
     
