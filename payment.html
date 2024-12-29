@@ -1,364 +1,409 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout - Método de Pagamento</title>
     <style>
-        /* Reset de margens e preenchimentos */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      /* Reset de margens e preenchimentos */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        /* Estilos para o cabeçalho principal */
-        header {
-            background-color: #ff0084;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      /* Estilos para o cabeçalho principal */
+      header {
+        background-color: #ff0084;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        /* Estilos para a logo */
-        .logo img {
-            height: 50px;
-        }
+      /* Estilos para a logo */
+      .logo img {
+        height: 50px;
+      }
 
-        /* Estilos para o corpo da página */
-        body {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+      /* Estilos para o corpo da página */
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-        .checkout-content {
-            flex: 1;
-            background-color: #fff;
-            margin: -10px 15% 20px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+      .checkout-content {
+        flex: 1;
+        background-color: #fff;
+        margin: -10px 15% 20px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .checkout-header {
-            background-color: #f2f2f2;
-            padding: 1%;
-            border-radius: 10px;
-            margin: -2.2% -2.2% 20px;
-        }
+      .checkout-header {
+        background-color: #f2f2f2;
+        padding: 1%;
+        border-radius: 10px;
+        margin: -2.2% -2.2% 20px;
+      }
 
-        .checkout-header h2 {
-            color: #333;
-            font-size: 24px;
-        }
+      .checkout-header h2 {
+        color: #333;
+        font-size: 24px;
+      }
 
-        .checkout-stages {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      .checkout-stages {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .stage {
-            text-align: center;
-            flex: 1;
-        }
+      .stage {
+        text-align: center;
+        flex: 1;
+      }
 
-        .stage i {
-            font-size: 15px;
-            color: #ff0084;
-        }
+      .stage i {
+        font-size: 15px;
+        color: #ff0084;
+      }
 
-        .stage p {
-            font-size: 14px;
-            margin-top: 10px;
-        }
+      .stage p {
+        font-size: 14px;
+        margin-top: 10px;
+      }
 
-        .completed i {
-            color: green;
-        }
+      .completed i {
+        color: green;
+      }
 
-        .pending i {
-            color: gray;
-        }
+      .pending i {
+        color: gray;
+      }
 
-        .subtitulo {
-            text-align: center;
-        }
+      .subtitulo {
+        text-align: center;
+      }
 
-        .subtitulo hr {
-            margin: 3% 0 2%;
-        }
+      .subtitulo hr {
+        margin: 3% 0 2%;
+      }
 
-        .payment-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+      .payment-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
 
-        .payment-option {
-            flex: 0 0 45%;
-            padding: 20px;
-            text-align: center;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+      .payment-option {
+        flex: 0 0 45%;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
 
-        .payment-option:hover {
-            border-color: #ff0084;
-            background-color: #fce4ec;
-        }
+      .payment-option:hover {
+        border-color: #ff0084;
+        background-color: #fce4ec;
+      }
 
-        .payment-option.selected {
-            border-color: #ff0084;
-            background-color: #fce4ec;
-        }
+      .payment-option.selected {
+        border-color: #ff0084;
+        background-color: #fce4ec;
+      }
 
-        .payment-option i {
-            font-size: 30px;
-            color: #ff0084;
-        }
+      .payment-option i {
+        font-size: 30px;
+        color: #ff0084;
+      }
 
-        .payment-option p {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #333;
-        }
+      .payment-option p {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #333;
+      }
 
-        .payment-form {
-            display: none;
-            margin-top: 20px;
-        }
+      .payment-form {
+        display: none;
+        margin-top: 20px;
+      }
 
-        .payment-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+      .payment-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
 
-        .payment-form input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+      .payment-form input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            margin-left: 6%;
-        }
+      .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        margin-left: 6%;
+      }
 
-        .button-container button {
-            background-color: #ff0084;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
+      .button-container button {
+        background-color: #ff0084;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
 
-        .button-container button:last-child {
-            margin-right: 0;
-        }
+      .button-container button:last-child {
+        margin-right: 0;
+      }
 
-        .button-container button:hover {
-            background-color: #e60074;
-        }
+      .button-container button:hover {
+        background-color: #e60074;
+      }
 
-        .button-container a {
-            text-decoration: none;
-        }
+      .button-container a {
+        text-decoration: none;
+      }
 
-        .button-container button:first-child {
-            margin-left: -50%; /* Adiciona espaçamento à esquerda do botão de "Voltar" */
-        }
-
+      .button-container button:first-child {
+        margin-left: -50%; /* Adiciona espaçamento à esquerda do botão de "Voltar" */
+      }
     </style>
     <!-- Incluindo o FontAwesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
     <header>
-        <div class="logo">
-            <img src="img/logotipo_2.png" alt="Logo Higo">
-        </div>
+      <div class="logo">
+        <img src="img/logotipo_2.png" alt="Logo Higo" />
+      </div>
     </header>
 
     <div class="checkout-content">
-        <div class="checkout-header">
-            <div class="checkout-stages">
-                <div class="stage completed">
-                    <i class="fas fa-check-circle"></i>
-                    <p>Login</p>
-                </div>
-                <div class="stage completed">
-                    <i class="fas fa-user"></i>
-                    <p>Informações do Usuário</p>
-                </div>
-                <div class="stage pending">
-                    <i class="fas fa-credit-card"></i>
-                    <p>Pagamento</p>
-                </div>
-            </div>
+      <div class="checkout-header">
+        <div class="checkout-stages">
+          <div class="stage completed">
+            <i class="fas fa-check-circle"></i>
+            <p>Login</p>
+          </div>
+          <div class="stage completed">
+            <i class="fas fa-user"></i>
+            <p>Informações do Usuário</p>
+          </div>
+          <div class="stage pending">
+            <i class="fas fa-credit-card"></i>
+            <p>Pagamento</p>
+          </div>
         </div>
+      </div>
 
-        <div class="subtitulo">
-            <h4>Escolha o Método de Pagamento</h4>
-            <hr>
+      <div class="subtitulo">
+        <h4>Escolha o Método de Pagamento</h4>
+        <hr />
+      </div>
+
+      <div class="payment-options">
+        <!-- <div
+          class="payment-option"
+          id="debit-card"
+          onclick="toggleOption('debit-card')"
+        >
+          <i class="fas fa-credit-card"></i>
+          <p>Cartão de Débito</p>
+        </div> -->
+        <div
+          class="payment-option"
+          id="credit-card"
+          onclick="toggleOption('credit-card')"
+        >
+          <i class="fas fa-credit-card"></i>
+          <p>Cartão de Crédito</p>
         </div>
-
-        <div class="payment-options">
-            <div class="payment-option" id="debit-card" onclick="toggleOption('debit-card')">
-                <i class="fas fa-credit-card"></i>
-                <p>Cartão de Débito</p>
-            </div>
-            <div class="payment-option" id="credit-card" onclick="toggleOption('credit-card')">
-                <i class="fas fa-credit-card"></i>
-                <p>Cartão de Crédito</p>
-            </div>
-            <div class="payment-option" id="boleto">
-                <i class="fas fa-barcode"></i>
-                <p>Boleto</p>
-            </div>
-            <div class="payment-option" id="pix">
-                <i class="fas fa-qrcode"></i>
-                <p>Pix</p>
-            </div>
+        <div class="payment-option" id="boleto">
+          <i class="fas fa-barcode"></i>
+          <p>Boleto</p>
         </div>
-
-        <div class="payment-form" id="card-form">
-            <h4>Preencha os dados do cartão</h4>
-    <label for="cardHolder">Nome do Titular</label>
-    <input type="text" id="cardHolder" name="cardHolder" placeholder="Nome do titular do cartão" required />
-
-    <label for="cardNumber">Número do Cartão</label>
-    <input type="text" id="cardNumber" name="cardNumber" placeholder="Número do cartão" required />
-
-    <label for="expirationMonth">Mês de Expiração</label>
-    <input type="text" id="expirationMonth" name="expirationMonth" placeholder="MM" required />
-
-    <label for="expirationYear">Ano de Expiração</label>
-    <input type="text" id="expirationYear" name="expirationYear" placeholder="AAAA" required />
-
-    <label for="cvv">CVV</label>
-    <input type="text" id="cvv" name="cvv" placeholder="CVV" required />
+        <div class="payment-option" id="pix">
+          <i class="fas fa-qrcode"></i>
+          <p>Pix</p>
         </div>
+      </div>
 
-        <div class="button-container">
-            <a href="./checkout.html">
-                <button type="button" class="afastarBotao">Voltar</button>
-            </a>
-            <button type="button" onclick="finalizarPagamento()" class="afastarBotao">Finalizar</button>
-        </div>
+      <div class="payment-form" id="card-form">
+        <h4>Preencha os dados do cartão</h4>
+        <label for="cardHolder">Nome do Titular</label>
+        <input
+          type="text"
+          id="cardHolder"
+          name="cardHolder"
+          placeholder="Nome do titular do cartão"
+          required
+        />
+
+        <label for="cardNumber">Número do Cartão</label>
+        <input
+          type="text"
+          id="cardNumber"
+          name="cardNumber"
+          placeholder="Número do cartão"
+          required
+        />
+
+        <label for="expirationMonth">Mês de Expiração</label>
+        <input
+          type="text"
+          id="expirationMonth"
+          name="expirationMonth"
+          placeholder="MM"
+          required
+        />
+
+        <label for="expirationYear">Ano de Expiração</label>
+        <input
+          type="text"
+          id="expirationYear"
+          name="expirationYear"
+          placeholder="AAAA"
+          required
+        />
+
+        <label for="cvv">CVV</label>
+        <input type="text" id="cvv" name="cvv" placeholder="CVV" required />
+      </div>
+
+      <div class="button-container">
+        <a href="./checkout.html">
+          <button type="button" class="afastarBotao">Voltar</button>
+        </a>
+        <button
+          type="button"
+          onclick="finalizarPagamento()"
+          class="afastarBotao"
+        >
+          Finalizar
+        </button>
+      </div>
     </div>
 
     <script>
-         let selectedOption = null;
+      let selectedOption = null;
 
-function toggleOption(optionId) {
-    const cardForm = document.getElementById('card-form');
+      function toggleOption(optionId) {
+        const cardForm = document.getElementById("card-form");
 
-    if (selectedOption === optionId) {
-        document.getElementById(optionId).classList.remove('selected');
-        selectedOption = null;
-        cardForm.style.display = 'none';
-    } else {
-        document.querySelectorAll('.payment-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-        document.getElementById(optionId).classList.add('selected');
-        selectedOption = optionId;
-
-        if (optionId === 'debit-card' || optionId === 'credit-card') {
-            cardForm.style.display = 'block';
+        if (selectedOption === optionId) {
+          document.getElementById(optionId).classList.remove("selected");
+          selectedOption = null;
+          cardForm.style.display = "none";
         } else {
-            cardForm.style.display = 'none';
+          document.querySelectorAll(".payment-option").forEach((option) => {
+            option.classList.remove("selected");
+          });
+          document.getElementById(optionId).classList.add("selected");
+          selectedOption = optionId;
+
+          if (optionId === "debit-card" || optionId === "credit-card") {
+            cardForm.style.display = "block";
+          } else {
+            cardForm.style.display = "none";
+          }
         }
-    }
-}
+      }
 
-const paymentMethod = document.getElementById('paymentMethod');
-        const cardDetails = document.getElementById('cardDetails');
+      const paymentMethod = document.getElementById("paymentMethod");
+      const cardDetails = document.getElementById("cardDetails");
 
-        paymentMethod.addEventListener('change', () => {
-            if (paymentMethod.value === 'credit_card') {
-                cardDetails.style.display = 'block';
-            } else {
-                cardDetails.style.display = 'none';
-            }
-        });
-
-        document.getElementById('paymentForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData.entries());
-            if (data.paymentMethod === 'credit_card') {
-                data.cardDetails = {
-                    cardHolder: data.cardHolder,
-                    cardNumber: data.cardNumber,
-                    expirationMonth: data.expirationMonth,
-                    expirationYear: data.expirationYear,
-                    cvv: data.cvv,
-                };
-            }
-
-            try {
-                const response = await fetch('/finalizar-pagamento', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-                const result = await response.json();
-                alert(result.message || 'Pagamento realizado!');
-            } catch (error) {
-                alert('Erro ao processar pagamento.');
-            }
-        });
-
-        async function finalizarPagamento() {
-    const paymentData = {
-        billingType: selectedOption === 'credit-card' ? 'CREDIT_CARD' : 'PIX',
-        customer: 'cus_0T1mdomVMi39', // Substitua pelo ID do cliente recuperado no backend
-        value: 19.9, // Valor da assinatura
-        nextDueDate: new Date().toISOString().split('T')[0], // Data inicial da assinatura
-        cycle: 'MONTHLY',
-        description: 'Assinatura Higo',
-        cardDetails: {
-            cardHolder: document.getElementById('cardHolder').value,
-            cardNumber: document.getElementById('cardNumber').value,
-            expirationMonth: document.getElementById('expirationMonth').value,
-            expirationYear: document.getElementById('expirationYear').value,
-            cvv: document.getElementById('cvv').value
-        }
-    };
-
-    try {
-        const response = await fetch('/criar-assinatura', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(paymentData)
-        });
-        const result = await response.json();
-        if (result.success) {
-            alert('Assinatura criada com sucesso!');
+      paymentMethod.addEventListener("change", () => {
+        if (paymentMethod.value === "credit_card") {
+          cardDetails.style.display = "block";
         } else {
-            alert(result.message || 'Erro ao criar assinatura.');
+          cardDetails.style.display = "none";
         }
-    } catch (error) {
-        alert('Erro na comunicação com o servidor.');
-    }
-}
+      });
 
+      document
+        .getElementById("paymentForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData.entries());
+          if (data.paymentMethod === "credit_card") {
+            data.cardDetails = {
+              cardHolder: data.cardHolder,
+              cardNumber: data.cardNumber,
+              expirationMonth: data.expirationMonth,
+              expirationYear: data.expirationYear,
+              cvv: data.cvv,
+            };
+          }
+
+          try {
+            const response = await fetch("/finalizar-pagamento", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+            alert(result.message || "Pagamento realizado!");
+          } catch (error) {
+            alert("Erro ao processar pagamento.");
+          }
+        });
+
+      async function finalizarPagamento() {
+        // Obter o email da sessão (exemplo de como isso pode ser feito, substitua conforme necessário)
+        const email = sessionStorage.getItem("email"); // Ou qualquer outro método para acessar o email da sessão
+
+        const paymentData = {
+          billingType: selectedOption === "credit-card" ? "CREDIT_CARD" : "PIX",
+          customerId: "cus_0T1mdomVMi39", // Substitua pelo ID do cliente recuperado no backend
+          value: 19.9, // Valor da assinatura
+          nextDueDate: new Date().toISOString().split("T")[0], // Data inicial da assinatura
+          cycle: "MONTHLY",
+          description: "Assinatura Higo",
+          email: email, // Adicionando o email aqui
+          cardDetails: {
+            cardHolder: document.getElementById("cardHolder").value,
+            cardNumber: document.getElementById("cardNumber").value,
+            expirationMonth: document.getElementById("expirationMonth").value,
+            expirationYear: document.getElementById("expirationYear").value,
+            cvv: document.getElementById("cvv").value,
+          },
+        };
+
+        try {
+          const response = await fetch("/criar-assinatura", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(paymentData),
+          });
+          const result = await response.json();
+          if (result.success) {
+            alert("Assinatura criada com sucesso!");
+          } else {
+            alert(result.message || "Erro ao criar assinatura.");
+          }
+        } catch (error) {
+          alert("Erro na comunicação com o servidor.");
+        }
+      }
     </script>
-</body>
+  </body>
 </html>
