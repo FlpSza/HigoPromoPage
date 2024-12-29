@@ -325,6 +325,40 @@ const paymentMethod = document.getElementById('paymentMethod');
             }
         });
 
+        async function finalizarPagamento() {
+    const paymentData = {
+        billingType: selectedOption === 'credit-card' ? 'CREDIT_CARD' : 'PIX',
+        customer: 'cus_0T1mdomVMi39', // Substitua pelo ID do cliente recuperado no backend
+        value: 19.9, // Valor da assinatura
+        nextDueDate: new Date().toISOString().split('T')[0], // Data inicial da assinatura
+        cycle: 'MONTHLY',
+        description: 'Assinatura Higo',
+        cardDetails: {
+            cardHolder: document.getElementById('cardHolder').value,
+            cardNumber: document.getElementById('cardNumber').value,
+            expirationMonth: document.getElementById('expirationMonth').value,
+            expirationYear: document.getElementById('expirationYear').value,
+            cvv: document.getElementById('cvv').value
+        }
+    };
+
+    try {
+        const response = await fetch('/criar-assinatura', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentData)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Assinatura criada com sucesso!');
+        } else {
+            alert(result.message || 'Erro ao criar assinatura.');
+        }
+    } catch (error) {
+        alert('Erro na comunicação com o servidor.');
+    }
+}
+
     </script>
 </body>
 </html>
