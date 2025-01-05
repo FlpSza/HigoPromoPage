@@ -27,6 +27,25 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Rota para testar conexão com o banco de dados
+app.get('/test-connection', async (req, res) => {
+    pool.connect((err) => {
+        if (err) {
+            console.error('Erro ao conectar ao banco de dados:', err);
+            return res.status(500).json({ 
+                success: false, 
+                message: 'Erro ao conectar ao banco de dados.', 
+                error: err.message 
+            });
+        }
+        console.log('Conexão bem-sucedida ao banco de dados!');
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Conexão bem-sucedida ao banco de dados!' 
+        });
+    });
+});
+
 // Rota para processar o registro de usuário
 app.post('/register', (req, res) => {
     const { username, email, phone, password } = req.body;
@@ -177,7 +196,76 @@ app.post('/criar-cliente', async (req, res) => {
     }
 });
 
+app.get('/api/usuario-logado', (req, res) => {
+    // Verifica se os dados do usuário estão na sessão
+    if (req.session && req.session.userData) {
+        res.json({
+            success: true,
+            usuario: req.session.userData, // Retorna os dados armazenados
+        });
+    } else {
+        res.status(401).json({
+            success: false,
+            message: 'Nenhum usuário logado.',
+        });
+    }
+});
 
+      // Função para gerar pix
+
+      const valorFixo = 5.0; // Exemplo de valor fixo em reais
+      const descricaoFixa = "Assinatura Higo"; // Descrição fixa para a cobrança
+
+      async function gerarPixInter(valorFixo, descricaoFixa) {
+        const tokenUrl = "https://cdpj.partners.bancointer.com.br/oauth/v2/token";
+        const pixUrl = "https://cdpj.partners.bancointer.com.br/pix/charge";
+
+        try {
+          // Obtenha o token de acesso
+          const tokenResponse = await fetch(tokenUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              grant_type: "client_credentials",
+              client_id: "c1e2aa0c-5d90-4b20-a7cb-73384a2ae52c",
+              client_secret: "539d9c5d-e7d2-4de6-9d8b-9ad0a14c3da9",
+            }),
+          });
+          const tokenData = await tokenResponse.json();
+          const accessToken = tokenData.access_token;
+
+          // Gere a cobrança do PIX
+          const pixResponse = await fetch(pixUrl, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              valor: valorFixo.toFixed(2),
+              descricao: descricaoFixa,
+              pagador: {
+                cpfCnpj: usuario.cpfCnpj,
+                nome: usuario.nome,
+              },
+            }),
+          });
+          const pixData = await pixResponse.json();
+
+          if (pixData.qrCode) {
+            // Exibir o QR Code ao usuário
+            document.getElementById("pixQrCode").src = pixData.qrCode;
+            document.getElementById("pixSection").style.display = "block";
+          } else {
+            alert("Erro ao gerar o PIX.");
+          }
+        } catch (error) {
+          console.error("Erro na integração com o Banco Inter:", error);
+          alert("Erro ao processar o PIX.");
+        }
+      }
 
 // Rota para criar assinatura (cobrança recorrente) com pagamento via cartão de crédito
 app.post('/criar-assinatura', async (req, res) => {
@@ -283,9 +371,6 @@ app.post('/criar-assinatura', async (req, res) => {
         }
 
         console.log('Token de cartão de crédito criado:', tokenData);
-
-        // Continue com a criação da assinatura usando o token (não mostrado aqui)
-        // ...
 
         // Resposta de sucesso
         res.json({
