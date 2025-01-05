@@ -4,6 +4,7 @@ const axios = require('axios');
 const db = require('./db/connection');
 const app = express();
 const session = require('express-session');  
+const cors = require('cors');
 // const fetch = require('node-fetch');
 const PORT = 3000;
 require('dotenv').config()
@@ -21,6 +22,12 @@ app.use(session({
     saveUninitialized: true,     // Salva sessões mesmo sem dados
     cookie: { secure: false }    // Se estiver usando HTTPS, altere para true
 }));
+
+app.use(cors({
+    origin: 'https://higoviagens.com', // Permitir apenas esta origem
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 
 // Rota principal
 app.get('/', (req, res) => {
