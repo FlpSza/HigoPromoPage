@@ -166,7 +166,7 @@ app.post('/criar-cliente', async (req, res) => {
         } else {
             // Criar novo usuário com o customerId
             const insertQuery =
-                'INSERT INTO users (username, email, phone, customerId) VALUES (?, ?, ?, ?, ?, ?)';
+                'INSERT INTO users (username, email, phone, customerId) VALUES (?, ?, ?, ?)';
             const [insertResult] = await db.query(insertQuery, [
                 clienteData.nome,
                 clienteData.email,
