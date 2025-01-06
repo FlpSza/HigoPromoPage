@@ -201,9 +201,11 @@ app.post("/criar-cliente", async (req, res) => {
 
       // Configurar o transporte de email
       const transporter = nodemailer.createTransport({
-        service: "gmail", // Ou outro serviço, como Outlook, Yahoo
+        host: 'smtp.hostinger.com', // Servidor SMTP da Hostinger
+        port: 465, // Porta para SSL
+        secure: true, // Utiliza SSL
         auth: {
-          user: "confirmacao@higoviagens.com", // Seu email
+          user: 'confirmacao@higoviagens.com', // Seu email
           pass: "Confirmacao25.", // Use senha do app (não senha normal)
         },
       });
@@ -216,8 +218,13 @@ app.post("/criar-cliente", async (req, res) => {
         text: `Olá ${clienteData.nome},\n\nSeu usuário foi criado com sucesso!\n\nSenha de acesso: ${genericPassword}\n\nPor favor, altere sua senha após o primeiro login.\n\nAtenciosamente,\nEquipe.`,
       };
 
-      await transporter.sendMail(mailOptions);
-      console.log("Email enviado com sucesso para:", clienteData.email);
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email enviado com sucesso para:", clienteData.email);
+      } catch (emailError) {
+        console.error("Erro ao enviar o email:", emailError.message);
+        console.log("Detalhes do email não enviado:", mailOptions);
+      }
     }
 
     // Resposta de sucesso

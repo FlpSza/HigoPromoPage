@@ -305,17 +305,24 @@
         })
           .then((response) => response.json())
           .then((data) => {
+            console.log("Resposta do servidor:", data);
             if (data.success) {
-              // Redirecionar para a próxima página, por exemplo, de pagamento
+              // Redirecionar para a próxima página
               window.location.href = "./payment.html";
             } else {
-              alert("Erro ao criar o cliente(front): " + data.error);
+              console.error("Erro retornado pelo backend:", {
+                status: "Falha",
+                mensagemErro: data.error,
+                respostaCompleta: data,
+              });
+              alert("Erro ao criar o cliente, verifique as informações adicionadas.");
+              console.log("Resposta do servidor:", data);
             }
           })
           .catch((error) => {
             console.error("Erro ao enviar os dados:", error);
           });
       });
-</script>
+    </script>
   </body>
 </html>
