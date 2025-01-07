@@ -7,6 +7,8 @@ const session = require("express-session");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const cron = require('node-cron');
+const fs = require('fs');
 // const fetch = require('node-fetch');
 const PORT = 3000;
 require("dotenv").config();
@@ -34,6 +36,16 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Configuração da API (substitua pelas suas credenciais)
+const PIX_API_URL = "https://cdpj.partners.bancointer.com.br/oauth/v2/token"; // Substitua pelo endpoint correto
+const CLIENT_ID = "3fea13df-1e68-447c-b306-a87d7c058024"; // Armazene o client_id no .env
+const CLIENT_SECRET = "79f8d856-bb83-4ada-a5d0-01b22cfe43c1"; // Armazene o client_secret no .env
+const CERT_PATH = './certificados/Inter API_Certificado.crt';
+const KEY_PATH = './certificados/Inter API_Chave.key';
+// Caminhos para os arquivos de certificado e chave privada
+const certPath = path.resolve(__dirname, 'certificados/Inter API_Certificado.crt');
+const keyPath = path.resolve(__dirname, 'certificados/Inter API_Chave.key');
 
 // Rota principal
 app.get("/", (req, res) => {
@@ -128,8 +140,9 @@ app.post("/login", async (req, res) => {
 });
 
 // Configuração da chave da API do Asaas
-const ASAAS_API_KEY =
-  "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjUyOWZkNGYwLTE5Y2YtNGY5NC1iMmJhLTk3MTFiYzA0OTdjYTo6JGFhY2hfMTQ5ZjcxMjAtODUxYi00NGVlLTk4MDQtZmUzYTg1MzU0Y2Qw";
+// const ASAAS_API_KEY =
+//   "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjUyOWZkNGYwLTE5Y2YtNGY5NC1iMmJhLTk3MTFiYzA0OTdjYTo6JGFhY2hfMTQ5ZjcxMjAtODUxYi00NGVlLTk4MDQtZmUzYTg1MzU0Y2Qw";
+const ASAAS_API_KEY = "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjQ0YWY1ZjBiLTQ3YTUtNDI1NS04NDI4LTgyMmRjMTkzZGY2ZDo6JGFhY2hfYTRlZjI3ZDEtNTM4NC00MzIxLWEyMjgtNTUwMmU4MGM2YmQz";
 
 // Endpoint para criar cliente
 app.post("/criar-cliente", async (req, res) => {
@@ -140,7 +153,7 @@ app.post("/criar-cliente", async (req, res) => {
     console.log("Enviando dados para criar cliente no Asaas:", clienteData);
 
     const response = await axios.post(
-      "https://sandbox.asaas.com/api/v3/customers",
+      "https://www.asaas.com/api/v3/customers",
       {
         name: `${clienteData.nome} ${clienteData.sobrenome}`,
         cpfCnpj: clienteData.cpf,
@@ -275,56 +288,6 @@ app.get("/api/usuario-logado", (req, res) => {
 const valorFixo = 5.0; // Exemplo de valor fixo em reais
 const descricaoFixa = "Assinatura Higo"; // Descrição fixa para a cobrança
 
-async function gerarPixInter(valorFixo, descricaoFixa) {
-  const tokenUrl = "https://cdpj.partners.bancointer.com.br/oauth/v2/token";
-  const pixUrl = "https://cdpj.partners.bancointer.com.br/pix/charge";
-
-  try {
-    // Obtenha o token de acesso
-    const tokenResponse = await fetch(tokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: "c1e2aa0c-5d90-4b20-a7cb-73384a2ae52c",
-        client_secret: "539d9c5d-e7d2-4de6-9d8b-9ad0a14c3da9",
-      }),
-    });
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
-
-    // Gere a cobrança do PIX
-    const pixResponse = await fetch(pixUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        valor: valorFixo.toFixed(2),
-        descricao: descricaoFixa,
-        pagador: {
-          cpfCnpj: usuario.cpfCnpj,
-          nome: usuario.nome,
-        },
-      }),
-    });
-    const pixData = await pixResponse.json();
-
-    if (pixData.qrCode) {
-      // Exibir o QR Code ao usuário
-      document.getElementById("pixQrCode").src = pixData.qrCode;
-      document.getElementById("pixSection").style.display = "block";
-    } else {
-      alert("Erro ao gerar o PIX.");
-    }
-  } catch (error) {
-    console.error("Erro na integração com o Banco Inter:", error);
-    alert("Erro ao processar o PIX.");
-  }
-}
 
 // Rota para criar assinatura (cobrança recorrente) com pagamento via cartão de crédito
 app.post("/criar-assinatura", async (req, res) => {
@@ -429,7 +392,7 @@ app.post("/criar-assinatura", async (req, res) => {
 
     // Realizar a requisição para a API Asaas
     const tokenResponse = await fetch(
-      "https://sandbox.asaas.com/api/v3/creditCard/tokenizeCreditCard",
+      "https://www.asaas.com/api/v3/creditCard/tokenizeCreditCard",
       tokenOptions
     );
 
@@ -479,6 +442,163 @@ app.post("/criar-assinatura", async (req, res) => {
       message: "Erro ao buscar informações do cliente ou tokenizar cartão.",
       error: err.message,
     });
+  }
+});
+
+//TOKEN API INTER
+const generateToken = async () => {
+  try {
+    const response = await axios.post(
+      'https://cdpj.partners.bancointer.com.br/oauth/v2/token',
+      'client_id=3fea13df-1e68-447c-b306-a87d7c058024&client_secret=79f8d856-bb83-4ada-a5d0-01b22cfe43c1&scope=cob.write&grant_type=client_credentials',
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        httpsAgent: new (require('https')).Agent({
+          cert: fs.readFileSync(certPath),
+          key: fs.readFileSync(keyPath),
+        })
+      }
+    );
+
+    const token = response.data.access_token;
+    const data_geracao = new Date();
+
+    // Atualizar o banco de dados com o novo token e a data de geração
+    const query = `
+    UPDATE token
+    SET token = ?, data_geracao = ?
+    WHERE id = 1;
+  `;
+    db.execute(query, [token, data_geracao], (err, results) => {
+      if (err) {
+        console.error('Erro ao atualizar o banco de dados:', err);
+        return;
+      }
+      console.log('Token atualizado com sucesso no banco de dados.');
+    });
+
+    return token; // Agora retorna o token gerado
+  } catch (error) {
+    console.error('Erro ao gerar o token:', error);
+    throw error; // Lança o erro para ser tratado na rota
+  }
+};
+
+// Rota para gerar o token via API
+app.post('/gerar-token', async (req, res) => {
+  try {
+    const token = await generateToken();
+    res.status(200).json({
+      success: true,
+      token: token,
+      message: 'Token gerado e armazenado com sucesso!',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao gerar o token.',
+      error: error.message,
+    });
+  }
+});
+
+const getTokenFromDatabase = async () => {
+  try {
+    // Executando a consulta de forma assíncrona
+    const [rows] = await db.execute("SELECT token FROM token LIMIT 1");
+
+    // Verificando se o token foi encontrado
+    if (rows.length > 0) {
+      return rows[0].token;
+    } else {
+      throw new Error("Token não encontrado.");
+    }
+  } catch (err) {
+    throw new Error('Erro ao recuperar o token: ' + err.message);
+  }
+};
+
+
+
+app.post("/gerar-cobranca", async (req, res) => {
+  // Informações que você já possui
+  const token = await getTokenFromDatabase(); // Substitua pelo seu token real
+  const contaCorrente = "409251879"; // Conta corrente selecionada
+
+  // Corpo da requisição para criar a cobrança
+  const corpo = {
+    calendario: {
+      expiracao: 3600,
+    },
+    valor: {
+      original: "5.00", // Valor da cobrança
+    },
+    chave: "2b3925d5-d94c-4b96-9348-e6510ceae42d", 
+  };
+
+  try {
+    // Configurar a requisição para criar a cobrança
+    const config = {
+      method: "post",
+      url: "https://cdpj.partners.bancointer.com.br/pix/v2/cob", // URL da API do Banco Inter para criação de cobrança
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "x-conta-corrente": contaCorrente,
+      },
+      httpsAgent: new (require("https").Agent)({
+        cert: fs.readFileSync(certPath),
+        key: fs.readFileSync(keyPath),
+      }),
+      data: corpo,
+    };
+
+    // Realizar a requisição usando axios
+    const response = await axios(config);
+
+    // Retornar a resposta da cobrança ao cliente
+    res.status(200).json({
+      success: true,
+      data: response.data,
+    });
+  } catch (error) {
+    console.error("Erro ao gerar a cobrança:", error.message);
+
+    // Se o erro for um erro de uma API externa (como Axios ou outro serviço), pode ser útil exibir mais detalhes:
+    if (error.response) {
+      // Caso a resposta da API contenha detalhes de erro, mostre a resposta completa
+      console.error("Detalhes da resposta do erro:", {
+        status: error.response.status,
+        headers: error.response.headers,
+        data: error.response.data, // Dados de erro enviados pela API
+      });
+
+      // Retornar a resposta completa de erro ao cliente
+      return res.status(error.response.status).json({
+        error: "Falha ao gerar a cobrança.",
+        details: error.response.data,
+      });
+    } else if (error.request) {
+      // Caso não tenha recebido uma resposta, exiba os detalhes da requisição
+      console.error("Detalhes da requisição do erro:", error.request);
+
+      // Retornar erro de requisição sem resposta
+      return res.status(500).json({
+        error: "Falha ao realizar a requisição.",
+        details: error.request,
+      });
+    } else {
+      // Se o erro não for relacionado a uma resposta ou requisição, exiba o erro completo
+      console.error("Erro desconhecido:", error);
+
+      // Retornar erro genérico
+      return res.status(500).json({
+        error: "Falha ao gerar a cobrança.",
+        details: error.message,
+      });
+    }
   }
 });
 

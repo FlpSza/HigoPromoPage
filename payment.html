@@ -269,14 +269,14 @@
       </div>
 
       <div class="payment-options">
-        <div
+        <!-- <div
           class="payment-option"
           id="debit-card"
           onclick="toggleOption('debit-card')"
         >
           <i class="fas fa-credit-card"></i>
           <p>Cartão de Débito</p>
-        </div>
+        </div> -->
         <div
           class="payment-option"
           id="credit-card"
@@ -289,16 +289,24 @@
           <i class="fas fa-barcode"></i>
           <p>Boleto</p>
         </div> -->
-        <div class="payment-option" id="pixSection" onclick="showCard()">
+        <div class="payment-option" id="pixSection" onclick="showPixCard()">
           <i class="fas fa-qrcode"></i>
           <p>Pix</p>
         </div>
       </div>
       <div class="card" id="pixCard">
         <button class="close" onclick="closeCard()">×</button>
-        <img src="https://via.placeholder.com/150" alt="QR Code" />
-        <div class="code">código-aqui-para-copiar</div>
-        <button onclick="copyCode()">Copiar Código</button>
+        <!-- Aqui você pode colocar o QR Code real ou gerar dinâmico -->
+        <img
+          id="pixQRCode"
+          src="https://via.placeholder.com/150"
+          alt="QR Code"
+        />
+        <!-- Adiciona um botão para copiar o código -->
+        <button id="copyButton" onclick="copiarCodigo()">Copiar Código</button>
+
+        <!-- Campo onde o código Pix será armazenado -->
+        <textarea id="codigoPix" style="display: none"></textarea>
       </div>
       <div class="payment-form" id="card-form">
         <h4>Preencha os dados do cartão</h4>
@@ -389,11 +397,6 @@
           cardDetails.style.display = "block";
         } else {
           cardDetails.style.display = "none";
-
-          if (optionId === "pix") {
-            alert("Você selecionou Pix!");
-            console.log("Pix selecionado");
-          }
         }
       });
 
@@ -415,17 +418,35 @@
           }
 
           try {
-            const response = await fetch("https://higopromopage.onrender.com/finalizar-pagamento", {
+            const response = await fetch("/finalizar-pagamento", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(data),
             });
             const result = await response.json();
             alert(result.message || "Pagamento realizado!");
-          } catch (error) {
-            alert("Erro ao processar pagamento.");
-          }
+          } catch (error) {}
         });
+
+      // Função para mostrar o card do Pix e gerar o código
+      function showPixCard() {
+        // Esconde outros formulários, caso haja algum visível
+        document.getElementById("card-form").style.display = "none";
+
+        // Mostra o card do Pix com o QR Code
+        document.getElementById("pixCard").style.display = "block";
+
+        gerarCobrancaPix();
+      }
+
+      // Função para fechar o QR Code do Pix
+      function closeCard() {
+        document.getElementById("pixCard").style.display = "none";
+      }
+
+      function showCard() {
+        document.getElementById("pixCard").style.display = "block";
+      }
 
       async function finalizarPagamento() {
         // Obter o email da sessão (exemplo de como isso pode ser feito, substitua conforme necessário)
@@ -434,7 +455,7 @@
         const paymentData = {
           billingType: selectedOption === "credit-card" ? "CREDIT_CARD" : "PIX",
           customerId: "cus_0T1mdomVMi39", // Substitua pelo ID do cliente recuperado no backend
-          value: 19.9, // Valor da assinatura
+          value: 5.0, // Valor da assinatura
           nextDueDate: new Date().toISOString().split("T")[0], // Data inicial da assinatura
           cycle: "MONTHLY",
           description: "Assinatura Higo",
@@ -449,7 +470,7 @@
         };
 
         try {
-          const response = await fetch("https://higopromopage.onrender.com/criar-assinatura", {
+          const response = await fetch("/criar-assinatura", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(paymentData),
@@ -467,7 +488,7 @@
 
       async function obterUsuarioLogado() {
         try {
-          const response = await fetch("https://higopromopage.onrender.com/api/usuario-logado", {
+          const response = await fetch("/usuario-logado", {
             method: "GET",
             credentials: "include", // Inclui cookies na requisição para manter a sessão
           });
@@ -494,20 +515,53 @@
         }
       }
 
-      function showCard() {
-        document.getElementById("pixCard").style.display = "block";
+      async function gerarCobrancaPix() {
+        try {
+          // Chama a rota no backend para gerar a cobrança Pix
+          const response = await fetch("/gerar-cobranca", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+
+          // Verifique a resposta
+          const result = await response.json();
+
+          if (result.success) {
+            // Pegue o valor de pixCopiaECola da resposta
+            const pixCode = result.data.pixCopiaECola;
+
+            // Exibe o código Pix no campo de texto oculto
+            document.getElementById("codigoPix").value = pixCode;
+
+
+            // Habilita o botão de copiar (se necessário)
+            document.getElementById("copyButton").style.display = "block";
+          } else {
+            alert(result.message || "Erro ao gerar a cobrança.");
+          }
+        } catch (error) {
+          alert("Erro na comunicação com o servidor.");
+          console.error("Erro ao chamar a API de cobrança:", error);
+        }
       }
 
-      function closeCard() {
-        document.getElementById("pixCard").style.display = "none";
-      }
+// Função de copiar o código Pix
+function copiarCodigo() {
+    const codigoPix = document.getElementById("codigoPix");
 
-      function copyCode() {
-        const code = document.querySelector(".card .code").innerText;
-        navigator.clipboard.writeText(code).then(() => {
-          alert("Código copiado!");
-        });
-      }
+    // Torna o código Pix visível para ser copiado
+    codigoPix.style.display = "block";
+
+    // Copia o conteúdo do código Pix para a área de transferência
+    codigoPix.select();
+    codigoPix.setSelectionRange(0, 99999); // Para dispositivos móveis
+    document.execCommand("copy");
+    codigoPix.style.display = "none"; 
+
+    // Alerta de confirmação
+    alert("Código Pix copiado com sucesso!");
+  }
     </script>
   </body>
 </html>
