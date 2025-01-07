@@ -31,9 +31,9 @@ app.use(
 
 app.use(
   cors({
-    origin: "https://higoviagens.com", // Permitir apenas esta origem
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*", // Permitir todas as origens
+    methods: ["GET", "POST", "OPTIONS"], // Métodos permitidos
+    allowedHeaders: ["Content-Type", "Authorization"], // Cabeçalhos permitidos
   })
 );
 
@@ -142,8 +142,7 @@ app.post("/login", async (req, res) => {
 // Configuração da chave da API do Asaas
 // const ASAAS_API_KEY =
 //   "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjUyOWZkNGYwLTE5Y2YtNGY5NC1iMmJhLTk3MTFiYzA0OTdjYTo6JGFhY2hfMTQ5ZjcxMjAtODUxYi00NGVlLTk4MDQtZmUzYTg1MzU0Y2Qw";
-const ASAAS_API_KEY = "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjQ0YWY1ZjBiLTQ3YTUtNDI1NS04NDI4LTgyMmRjMTkzZGY2ZDo6JGFhY2hfYTRlZjI3ZDEtNTM4NC00MzIxLWEyMjgtNTUwMmU4MGM2YmQz";
-
+const ASAAS_API_KEY = "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjhhYjE0MmIyLTQ2NmQtNDNhNC1iNTBlLTI2Zjc3MmY5ODA0Zjo6JGFhY2hfYzRhMGVmYzAtY2ZlZi00YjlkLTljOTEtYTExNzc3Y2IwYjg4"
 // Endpoint para criar cliente
 app.post("/criar-cliente", async (req, res) => {
   const clienteData = req.body;
@@ -283,12 +282,6 @@ app.get("/api/usuario-logado", (req, res) => {
   }
 });
 
-// Função para gerar pix
-
-const valorFixo = 5.0; // Exemplo de valor fixo em reais
-const descricaoFixa = "Assinatura Higo"; // Descrição fixa para a cobrança
-
-
 // Rota para criar assinatura (cobrança recorrente) com pagamento via cartão de crédito
 app.post("/criar-assinatura", async (req, res) => {
   // Recuperar os dados da sessão
@@ -379,6 +372,7 @@ app.post("/criar-assinatura", async (req, res) => {
       remoteIp: req.ip,
     };
 
+    console.log(tokenBody)
     // Opções para a requisição da tokenização
     const tokenOptions = {
       method: "POST",
@@ -501,6 +495,17 @@ app.post('/gerar-token', async (req, res) => {
       message: 'Erro ao gerar o token.',
       error: error.message,
     });
+  }
+});
+
+// Agendar a atualização do token a cada 40 minutos
+cron.schedule('*/40 * * * *', async () => {
+  try {
+    console.log('Atualizando token via cron...');
+    await generateToken();
+    console.log('Token atualizado com sucesso via cron!');
+  } catch (error) {
+    console.error('Erro ao atualizar o token via cron:', error.message);
   }
 });
 
