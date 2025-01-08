@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,7 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            background-color: #fff;
+            background-color: #ff0084;
             overflow-x: hidden; /* Remove o scroll horizontal */
 
         }
@@ -75,68 +75,26 @@
             display: flex;
             flex-direction: row; /* Imagem e texto ficam lado a lado */
             align-items: center; /* Alinha os itens verticalmente ao centro */
+            gap: 20px; /* Espaço entre a imagem e o texto */
             justify-content: center; /* Centraliza horizontalmente */
-            margin-top: -2%;
-            width: 100%;
-        }
-
-        .section.header img{
-            height: 43rem;
         }
 
         .section.content {
             margin-top: -350px; /* Ajuste o valor conforme necessário para subir a seção */
         }
 
-        .section1 {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .card-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            margin-left: -100%;
-            margin-top: 14%;
-        }
-        
-        .card {
-            background-color: white;
-            color: black;
-            border-radius: 1px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: 3px solid black;
-            text-align: left;
-            width: 50%;
-            height: 35rem;
-            z-index: 1;
-        }
-
-        .card h2{
-            margin-top: 2%;
-            margin-left: 3%;
-        }
-
         .imagens1 {
             display: flex;
-            flex-direction: column; /* Imagem e texto ficam lado a lado */
-            margin-left: 18%;
+            flex-direction: row; /* Imagem e texto ficam lado a lado */
+            margin-top: -30%; /* Ajuste o valor conforme necessário para subir a seção */
+            margin-left: 10%;
             align-items: center;
             justify-content: center; /* Centraliza horizontalmente */
             z-index: 10;
         }
 
-        .nocontrole{
-            position: absolute;
-            width: 25%;
-            margin-top: -10%;
-        }
-
         .header, .content, .footer {
-            background-color: #fff;
+            background-color: #ff0084;
             color: white;
         }
 
@@ -144,21 +102,33 @@
             width: 30%; /* Ajusta o tamanho da imagem */
         }
 
-        .passo {
-            margin-top: 2%;
-            width: 20%;
+        .passo1, .passo2, .passo3 {
+            width: 60%;
         }
 
         .passo3 {
-            width: 25rem;
+            margin-left: -30%;
         }
 
         .passo2 {
-            width: 25rem;
+            margin-top: 90%;
+            margin-left: 8%;
         }
         
         .passo1 {
-            width: 25rem;
+            margin-left: 35%;
+        }
+
+        .card {
+            background-color: white;
+            color: #ff0084;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            width: 300%;
+            max-width: 300px; /* Limita o tamanho do card */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .card1 {
@@ -229,7 +199,7 @@
 
         .botao{
             margin-top: 10%;
-            margin-left: -35%;
+            margin-left: 38%;
         }
 
         h1 span {
@@ -239,15 +209,8 @@
         .familia {
             width: 60%;
             margin-left: 50%;
-            margin-top: 15%;
+            margin-top: -29.9%;
             display: block; /* Garante que o elemento se comporte como um bloco */
-        }
-
-        .hcnm{
-            position: absolute;
-            margin-left: 20%;
-            margin-top: 10%;
-            width: 35%;
         }
 
         .circunferencia {
@@ -388,47 +351,56 @@
     </style>
 </head>
 <body>
+    <!-- Imagens posicionadas -->
+    <img src="../img/nuvem1.png" alt="Imagem 1" class="borda1">
+    <img src="../img/nuvem2.png" alt="Imagem 2" class="borda2">
+    
     <!-- Conteúdo principal -->
     <div class="section header">
-        <!-- <img src="../img/IMAGEM_1.png" alt="Imagem Central" class="IMAGEM_1"> -->
-         <img src="./img/Banner_Site_Promo.jpg" alt="">
+        <img src="../img/IMAGEM_1.png" alt="Imagem Central" class="IMAGEM_1">
+        <div>
+            <h1>
+                <span>SE CADASTRANDO NA HIGO</span>
+                <span>VOCÊ CONCORRE A 10</span>
+                <span>VIAGENS POR MÊS</span>
+            </h1>
+        </div>
     </div>
-    <div class="section1">
-        <div class="imagens1">
-            <div class="imagens-container">
-                <div>
-                    <img src="../img/Npasso1.png" class="passo">
-                </div>
-                <div>
-                    <img src="../img/Npasso2.png" class="passo">
-                </div>
-                <div>
-                    <img src="../img/Npasso3.png" class="passo">
-                </div>
-                <div>
-                    <img src="../img/Npasso4.png" class="passo">
-                </div>
-            </div>
-            <div class="botao">
-                <a href="./checkin.html" class="button">QUERO PARTICIPAR</a>
-            </div>
-        </div>
-        <div class="card-container">
-            <img src="./img/no controle.png" alt="" class="nocontrole">
-            <div class="card">
-                <h2>• Será sorteado 120 viagens (10 por mês);</h2>
-                <h2>• Apenas território brasileiro;</h2>
-                <h2>• Todos os destinos serão publicados no ínicio do mês;</h2>
-                <h2>• O ganhador tem direito a levar a um acompanhante;</h2>
-                <h2>• O sorteio será no último dia de cada mês;</h2>
-                <h2>• Pagamentos com cartões de crédito ganha 1 número a mais para concorrer;</h2>
-                <h2>• O pagamento realizado no mês participará dos sorteios referente a aquele mês</h2>
-                
-            </div>
-        </div>
-    </div>    
+    
 
-<!-- <div class="segundo_card">
+    <div class="section content">
+        <h1>COMO PARTICIPAR?</h1>
+    </div>
+
+    <div class="circunferencia">
+        <img src="../img/circunferencia.png" class="circunferencia">
+    </div>
+    
+    <div class="imagens1">
+        <div>
+            <img src="../img/passo1.png" class="passo1">
+            <div class="card1">
+                <p>FAÇA SEU CADASTRO NO SITE DA HIGO E SIGA A GENTE NO INSTAGRAM E TIKTOK</p>
+            </div>
+        </div>
+        <div>
+            <img src="../img/passo2.png" class="passo2">
+            <div class="card">
+                <p>PARA CONCORRER É NECESSARIO PAGAR A MENSALIDADE DE R$ 00,00 REAIS.</p>
+            </div>
+        </div>
+        <div>
+            <img src="../img/passo3.png" class="passo3">
+            <div class="card3">
+                <p>CONCORRA A 10 VIAGENS POR MÊS COM DIREITO A 1 ACOMPANHANTE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="botao">
+        <a href="./checkout.html" class="button">QUERO PARTICIPAR</a>
+    </div>
+<div class="segundo_card">
     <div class="cardbaixo">
         <h1>GANHE VIAGENS</h1>
         <img src="../img/logo1.png"> </img>
@@ -460,8 +432,15 @@
         <img src="./img/logo2.png"> </img>
         <p>Pagamento com cartão de crédito aumenta suas chances de ser sorteado.</p>
     </div>
-</div> -->
-<img src="./img/hcnm.png" alt="" class="hcnm">
+</div>
+
 <img src="../img/Familia_fundo2.png" class="familia"></img>
+<!-- 
+    <div class="section footer">
+        <p>&copy; 2024 Todos os direitos reservados</p>
+    </div> -->
+
+    <!-- Imagem no final da página -->
+    <img src="../img/nuvemBaixo.png" alt="Imagem 3" class="borda3">
 </body>
 </html>
