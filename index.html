@@ -76,8 +76,11 @@
             flex-direction: row; /* Imagem e texto ficam lado a lado */
             align-items: center; /* Alinha os itens verticalmente ao centro */
             justify-content: center; /* Centraliza horizontalmente */
-            margin-top: -2%;
+            margin-top: 0%;
             width: 100%;
+            background-image: url('./img/Banner_Site_Promo.jpg');
+            background-size: cover;
+            background-position: center;
         }
 
         .section.header img{
@@ -100,7 +103,7 @@
             justify-content: center;
             align-items: flex-start;
             margin-left: -100%;
-            margin-top: 14%;
+            margin-top: 17%;
         }
         
         .card {
@@ -111,7 +114,7 @@
             border: 3px solid black;
             text-align: left;
             width: 50%;
-            height: 35rem;
+            height: 32rem;
             z-index: 1;
         }
 
@@ -189,31 +192,26 @@
 
         .segundo_card {
             display: flex;
-            justify-content: space-between;
+            /* justify-content: space-between; */
+            position: absolute;
             margin-left: 20%;
             margin-right: 15%;
         }
 
         .terceiro_card{
             display: flex;
-            justify-content: space-between; 
-            margin-right: 37%;
-            margin-left: 20%;
+            /* justify-content: space-between;  */
+            margin-right: 3%;
+            margin-left: 2%;
         }
 
         .cardbaixo {
             font-family: 'SN Pro', sans-serif;
-            background-color: white;
-            color: #ff0084;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10%;
+            margin-left: -10%;
             width: 100%;
-            max-width: 290px; 
-            height: 20rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1;
+        }
+        .cardbaixo a{
+            width: 10%;
         }
 
         .button {
@@ -230,6 +228,13 @@
         .botao{
             margin-top: 10%;
             margin-left: -35%;
+        }
+
+        .botao2{
+            position: absolute;
+            z-index: 10000000;
+            margin-top: -15%;
+            margin-left: 39%;
         }
 
         h1 span {
@@ -259,139 +264,60 @@
         }
 
         .segundo_card img{
-            width: 16rem;
-            margin-left: 2%;
+            width: 4rem;
         }
 
         .terceiro_card img{
             width: 16rem;
             margin-left: 2%;
         }
+        .sociais {
+            display: flex;
+            justify-content: center; /* Centraliza o conteúdo horizontalmente */
+            align-items: center; /* Alinha o conteúdo verticalmente */
+            margin-top: -10%;
+        }
+        
+        .cardbaixo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+            justify-items: center; /* Centraliza os itens em cada célula */
+            align-items: center; /* Centraliza verticalmente os itens em cada célula */
+            margin-left: -120%;
+        }
+        
+        .cardbaixo img {
+            width: 5rem; /* Ajuste o tamanho das imagens */
+            height: 50%;
+            margin-top: 2rem;
+            margin-left: 3rem;
+            transition: transform 0.3s;
+        }
+        
+        .cardbaixo a img:hover {
+            transform: scale(1.2); /* Aumenta o tamanho ao passar o mouse */
+            cursor: pointer;
+        }
+
 
         @media (max-width: 768px) {
-        body {
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-
-        .borda1 {
-            position: absolute;
-            top: -2%;
-            left: 13%;
-            transform: rotate(90deg) translateY(-50%);
-            transform-origin: left top;
-            width: 40%;
-        }
-
-        .borda2 {
-            position: absolute;
-            top: 20%;
-            right: 14%;
-            transform: rotate(-90deg) translateY(-50%);
-            transform-origin: right top;
-            width: 40%;
-        }
-
-        .borda3 {
-            position: absolute;
-            bottom: -323.7%;
-            left: 0;
-            transform: translateY(0);
-            width: 40%;
-        }
-
-        .section.header {
-            flex-direction: column; /* Alinha itens verticalmente */
-            align-items: center;
-            margin-top: -25%;
-        }
-
-        .section {
-            margin-top: -80%;
-        }
-
-        .section.content {
-            margin-top: -125%; /* Ajuste o valor conforme necessário para subir a seção */
-        }
-
-        .IMAGEM_1 {
-            width: 80%; /* Ajusta o tamanho da imagem para caber na tela */
-        }
-
-        .passo1, .passo2, .passo3 {
-            width: 80%; /* Ajusta o tamanho das imagens para caberem na tela */
-        }
-
-        .passo1 {
-            margin-top: -30%;
-            margin-left: 8%;
-        }
-
-        .passo2 {
-            margin-top: -1%;
-        }
-
-        .passo3 {
-            margin-left: 10%;
-        }
-
-        .card, .card1, .card3 {
-            width: 90%; /* Ajusta os cards para ocuparem quase toda a largura da tela */
-            margin: 10px auto; /* Adiciona espaçamento e centraliza */
-        }
-
-        .imagens1 {
-            flex-direction: column; /* Empilha os itens verticalmente */
-            margin-left: 0; /* Remove margens laterais */
-            gap: 20px; /* Espaço entre os itens */
-        }
-
-        .botao {
-            margin: 20px auto; /* Centraliza o botão */
-            text-align: center;
-        }
-
-        .segundo_card, .terceiro_card {
-            flex-direction: column; /* Empilha os cards verticalmente */
-            gap: 30px; /* Adiciona espaço entre os cards */
-            margin-left: 15%;
-            margin-bottom: 10%;
-        }
-
-        .cardbaixo {
-            width: 180%; /* Ajusta a largura para caber na tela */
-            height: auto; /* Permite que a altura se ajuste ao conteúdo */
-            margin-top: 10%;
-        }
-
-        .familia {
-            width: 90%; /* Reduz a largura da imagem */
-            margin-top: -60.8%;
-            margin-left: 5%;
-            display: block;
-        }
-
-        .circunferencia {
-            display: none;
-        }
-
-        h1 {
-            font-size: 1.5rem; /* Ajusta o tamanho da fonte para telas menores */
-        }
-
-        .button {
-            padding: 15px 40px; /* Reduz o tamanho do botão */
-            font-size: 16px; /* Reduz o tamanho da fonte */
-        }
-    }
-
+            html,body {
+                box-sizing: border-box;
+                overflow-x: hidden;
+                margin: 0;
+                padding: 0;
+            }
+}
     </style>
 </head>
 <body>
     <!-- Conteúdo principal -->
     <div class="section header">
         <!-- <img src="../img/IMAGEM_1.png" alt="Imagem Central" class="IMAGEM_1"> -->
-         <img src="./img/Banner_Site_Promo.jpg" alt="">
+         <!-- <img src="./img/Banner_Site_Promo.jpg" alt=""> -->
+    </div>
+    <div class="botao2">
+        <a href="./checkin.html" class="button">QUERO PARTICIPAR</a>
     </div>
     <div class="section1">
         <div class="imagens1">
@@ -428,40 +354,32 @@
         </div>
     </div>    
 
-<!-- <div class="segundo_card">
-    <div class="cardbaixo">
-        <h1>GANHE VIAGENS</h1>
-        <img src="../img/logo1.png"> </img>
-        <p>você concorre a 120 viagens, sendo 10 sorteios por mês.</p>
-    </div>
-    
-    <div class="cardbaixo">
-        <h1>VIAJE O BRASIL</h1>
-        <img src="../img/logo2.png"> </img>
-        <p>Todos os destinos serão dentro do territorio brasileiro.</p>
-    </div>
-
-    <div class="cardbaixo">
-        <h1>ACOMPANHANTE</h1>
-        <img src="./img/logo3.png"> </img>
-        <p>você pode levar até um acompanhante para aprovitar do seu lado.</p>
+<img src="./img/hcnm.png" alt="" class="hcnm">
+<img src="../img/Familia_fundo2.png" class="familia"></img>
+<div class="sociais">
+    <div class="segundo_card">
+        <div class="cardbaixo">
+            <a href="https://www.instagram.com" target="_blank">
+                <img src="./img/instagramV.png" alt="Logo do Instagram">
+            </a>
+            <a href="https://www.whatsapp.com" target="_blank">
+                <img src="./img/WhatsappV.png" alt="Logo do WhatsApp">
+            </a>
+            <a href="https://www.tiktok.com" target="_blank">
+                <img src="./img/TiktokV.png" alt="Logo do TikTok">
+            </a>
+            <a href="https://www.youtube.com" target="_blank">
+                <img src="./img/youtubeV.png" alt="Logo do YouTube">
+            </a>
+            <a href="https://www.twitter.com" target="_blank">
+                <img src="./img/X.png" alt="Logo do X (Twitter)">
+            </a>
+            <a href="https://www.facebook.com" target="_blank">
+                <img src="./img/FacebookV.png" alt="Logo do Facebook">
+            </a>
+        </div>
     </div>
 </div>
 
-<div class="terceiro_card">
-    <div class="cardbaixo">
-        <h1>OLHE A DATA</h1>
-        <img src="../img/logo4.png"> </img>
-        <p>Sorteio será feito no último dia de cada mês, fique atento.</p>
-    </div>
-
-    <div class="cardbaixo">
-        <h1>MAIS CHANCES</h1>
-        <img src="./img/logo2.png"> </img>
-        <p>Pagamento com cartão de crédito aumenta suas chances de ser sorteado.</p>
-    </div>
-</div> -->
-<img src="./img/hcnm.png" alt="" class="hcnm">
-<img src="../img/Familia_fundo2.png" class="familia"></img>
 </body>
 </html>
