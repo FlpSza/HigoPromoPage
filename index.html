@@ -208,11 +208,37 @@
 
 
         @media (max-width: 768px) {
-            html,body {
+            html, body {
                 box-sizing: border-box;
-                overflow-x: hidden;
                 margin: 0;
                 padding: 0;
+                overflow-x: hidden;
+            }
+            .section.header {
+                flex-direction: column; /* Coloca a imagem e o texto em coluna */
+                text-align: center; /* Centraliza o conteúdo */
+                background-image: url('./img/Banner_Site_Promo_Celular.jpg');
+                background-size: cover;
+            }
+        
+            .section1{
+                display: flexbox;
+                flex-direction: column;
+            }
+        
+            .card {
+                width: 100%; /* Faz o cartão ocupar toda a largura disponível */
+                margin: 20px 0; /* Espaçamento entre os cartões */
+            }
+        
+            .sociais {
+                flex-direction: column; /* Alinha os ícones de redes sociais em coluna */
+                margin-top: 20px;
+            }
+        
+            .button {
+                font-size: 16px; /* Reduz o tamanho do texto do botão em telas pequenas */
+                padding: 15px 40px;
             }
 }
     </style>
@@ -224,7 +250,7 @@
          <!-- <img src="./img/Banner_Site_Promo.jpg" alt=""> -->
     </div>
     <div class="botao2">
-        <a href="./checkin.html" class="button">QUERO PARTICIPAR</a>
+        <a href="./checkout.html" class="button">QUERO PARTICIPAR</a>
     </div>
     <div class="section1">
         <div class="imagens1">
@@ -243,7 +269,7 @@
                 </div>
             </div>
             <div class="botao">
-                <a href="./checkin.html" class="button">QUERO PARTICIPAR</a>
+                <a href="./checkout.html" class="button">QUERO PARTICIPAR</a>
             </div>
         </div>
         <div class="card-container">
