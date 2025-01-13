@@ -105,10 +105,10 @@ app.post("/register", (req, res) => {
 
 // Rota para processar o login de usuário
 app.post("/login", async (req, res) => {
-  const { username, pass } = req.body;
+  const { email, pass } = req.body;
 
   // Verificar se o nome de usuário e senha foram informados
-  if (!username || !pass) {
+  if (!email || !pass) {
     return res
       .status(400)
       .json({ message: "Nome de usuário e senha são obrigatórios." });
@@ -116,8 +116,8 @@ app.post("/login", async (req, res) => {
 
   try {
     // Buscar o usuário no banco de dados pelo nome de usuário
-    const [rows] = await db.query("SELECT * FROM users WHERE username = ?", [
-      username,
+    const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [
+      email,
     ]);
 
     if (rows.length === 0) {
@@ -192,10 +192,10 @@ app.post("/criar-cliente", async (req, res) => {
       console.log(`Usuário atualizado com customerId: ${customerId}`);
     } else {
       const genericPassword = crypto.randomBytes(4).toString("hex"); // Gerar senha genérica
-      const hashedPassword = crypto
-        .createHash("sha256")
-        .update(genericPassword)
-        .digest("hex"); // Opcional: Hash da senha
+    //   const hashedPassword = crypto
+    //     .createHash("sha256")
+    //     .update(genericPassword)
+    //     .digest("hex"); 
 
       // Criar novo usuário com o customerId
       const insertQuery =
@@ -207,7 +207,7 @@ app.post("/criar-cliente", async (req, res) => {
         // clienteData.cpf,
         // clienteData.cep,
         customerId,
-        hashedPassword,
+        genericPassword,
       ]);
       console.log(`Novo usuário criado com ID: ${insertResult.insertId}`);
 
